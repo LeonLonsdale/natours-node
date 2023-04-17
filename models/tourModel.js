@@ -140,11 +140,12 @@ tourSchema.post(/^find/, function (docs, next) {
   next();
 });
 
-tourSchema.pre(/^find/, (next) => {
+tourSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'guides',
     select: '-__v passwordChangedAt',
   });
+  next();
 });
 
 // aggregate middleware

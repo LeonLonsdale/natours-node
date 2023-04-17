@@ -14,6 +14,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 // [Global Middleware] ===========================================================
 // eslint-disable-next-line no-console
@@ -63,6 +64,7 @@ app.use(express.static(`${__dirname}/public`)); // public files include HTML, CS
 // mount the routers
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 // catch unhandled routes
 app.all('*', (req, res, next) => {
