@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+
 // const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
@@ -81,6 +82,7 @@ const tourSchema = new mongoose.Schema(
       address: String,
       description: String,
     },
+    // putting this in an array makes each location a sub-document with its own ID.
     locations: [
       {
         type: {
@@ -94,6 +96,7 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   },
   {
     toJSON: { virtuals: true },
@@ -107,6 +110,15 @@ tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
+
+// embedding data model
+// get users from their ID's
+// NOTES
+// tourSchema.pre('save', async function (next) {
+//   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+//   next();
+// });
 
 // tourSchema.post('save', (doc, next) => {
 //   console.log(doc);
@@ -126,6 +138,13 @@ tourSchema.post(/^find/, function (docs, next) {
   // eslint-disable-next-line no-console
   console.log(`[Post-Query] Query took ${Date.now() - this.start}ms`);
   next();
+});
+
+tourSchema.pre(/^find/, (next) => {
+  this.populate({
+    path: 'guides',
+    select: '-__v passwordChangedAt',
+  });
 });
 
 // aggregate middleware
