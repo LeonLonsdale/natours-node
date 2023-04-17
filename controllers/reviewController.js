@@ -1,11 +1,11 @@
 const Review = require('../models/reviewModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const APIFeatures = require('../utils/apifeatures');
+// const APIFeatures = require('../utils/apifeatures');
 
 exports.getReview = catchAsync(async (req, res, next) => {
   // find the tour
-  const review = await Review.findById(req.params.id);
+  const review = await Review.findById(req.params.id).populate('tour');
 
   // check the tour exists
 
@@ -22,12 +22,7 @@ exports.getReview = catchAsync(async (req, res, next) => {
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
   // get all reviews
-  const features = new APIFeatures(Review.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const reviews = await features.query;
+  const reviews = await Review.find();
 
   // return all reviews
   res.status(200).json({
