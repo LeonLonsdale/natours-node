@@ -14,8 +14,28 @@ const getToken = (id) =>
 const verifyToken = async (token) =>
   promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-const createSendTokent = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, res) => {
   const token = getToken(user._id);
+
+  const cookieOptions = {
+    // give the cookie an expiry date.
+    expires:
+      new Date(Date.now()) +
+      process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+    // prevents cookie from being accessed or modified by the browser
+    httpOnly: true,
+  };
+
+  // in production, only send cookie if its https (encrypted/secure).
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  // attach cookie to response object
+  // res.cookie('nameOfCookie', dataToSend, cookieOptions);
+  res.cookie('jwt', token, cookieOptions);
+
+  // remove password from output
+  user.password = undefined;
+
   res.status(statusCode).json({
     status: 'success',
     token,
@@ -33,7 +53,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirmation: req.body.passwordConfirmation,
   });
 
-  createSendTokent(user, 201, res);
+  createSendToken(user, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -52,7 +72,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
 
   // 3) send a token back to the client
-  createSendTokent(user, 200, res);
+  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -158,7 +178,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // update password change date on user
   // log user in
-  createSendTokent(user, 200, res);
+  createSendToken(user, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -179,5 +199,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // log the user in
 
-  createSendTokent(user, 200, res);
+  createSendToken(user, 200, res);
 });

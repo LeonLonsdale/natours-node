@@ -11,7 +11,8 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
 // [Middleware] ===========================================================
-console.log(`Starting under: ${process.env.NODE_ENV}`);
+// eslint-disable-next-line no-console
+console.log(`Starting app. Mode: ${process.env.NODE_ENV}`);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
