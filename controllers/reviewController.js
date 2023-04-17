@@ -35,6 +35,9 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 });
 
 exports.createReview = catchAsync(async (req, res, next) => {
+  // nested routes tours/:tourId/reviews
+  if (!req.body.tour) req.body.tour = req.params.tourId; // reference tour id in review (parent referencing)
+  if (!req.body.user) req.body.user = req.user.id; // reference user id in review (parent referencing)
   const review = await Review.create(req.body);
 
   res.status(201).json({

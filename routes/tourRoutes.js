@@ -1,7 +1,7 @@
 const express = require('express');
 const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
-const reviewController = require('../controllers/reviewController');
+const reviewRouter = require('./reviewRoutes');
 
 const router = express.Router();
 
@@ -19,8 +19,6 @@ const {
 
 const { protect, restrictTo } = authController;
 
-const { createReview } = reviewController;
-
 // 'param middleware' - middleware that only runs for certain parameters.
 // remember that a parameter is anything in the url additional to the route.
 
@@ -37,8 +35,6 @@ router
   .patch(updateTour)
   .delete(protect, restrictTo('admin'), deleteTour);
 
-router
-  .route('/:tourId/reviews')
-  .post(protect, restrictTo('users'), createReview);
+router.use('/:tourId/reviews', reviewRouter);
 
 module.exports = router;
