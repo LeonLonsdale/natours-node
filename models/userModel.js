@@ -45,6 +45,11 @@ const userSchema = new mongoose.Schema({
   },
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 // middleware
@@ -69,6 +74,13 @@ userSchema.pre('save', async function (next) {
   // that will mean that the token will be invalidated.
   // so we take 1 second off the current time.
   this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+// query middleware
+
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
   next();
 });
 
