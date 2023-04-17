@@ -2,7 +2,6 @@ const Review = require('../models/reviewModel');
 // const AppError = require('../utils/appError');
 // const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
-// const APIFeatures = require('../utils/apifeatures');
 
 exports.setTourUserIds = (req, res, next) => {
   if (!req.body.tour) req.body.tour = req.params.tourId; // reference tour id in review (parent referencing)

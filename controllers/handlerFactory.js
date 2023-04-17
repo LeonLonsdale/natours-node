@@ -65,8 +65,12 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
-    let query = Model.find();
-    if (popOptions) query = Model.find().populate(popOptions);
+    // for filtering reviews by tourId only
+    let filter = {};
+    if (req.params.tourId) filter = { tour: req.params.tourId };
+
+    let query = Model.find(filter);
+    if (popOptions) query = Model.find(filter).populate(popOptions);
     const features = new APIFeatures(query, req.query)
       .filter()
       .sort()
