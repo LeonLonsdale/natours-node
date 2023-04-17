@@ -1,11 +1,15 @@
 const Review = require('../models/reviewModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 // const APIFeatures = require('../utils/apifeatures');
 
 exports.getReview = catchAsync(async (req, res, next) => {
   // find the tour
-  const review = await Review.findById(req.params.id).populate('tour');
+  const review = await Review.findById(req.params.id).populate({
+    path: 'tour',
+    select: 'name',
+  });
 
   // check the tour exists
 
@@ -50,3 +54,5 @@ exports.createReview = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.deleteReview = factory.deleteOne(Review);

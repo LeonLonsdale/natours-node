@@ -4,10 +4,11 @@ const authController = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true });
 
-const { getReview, getAllReviews, createReview } = reviewController;
+const { getReview, getAllReviews, createReview, deleteReview } =
+  reviewController;
 const { protect, restrictTo } = authController;
 
-router.route('/:id').get(protect, getReview);
+router.route('/:id').get(protect, getReview).delete(deleteReview);
 router
   .route('/')
   .get(protect, getAllReviews)

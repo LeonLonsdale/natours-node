@@ -2,6 +2,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 // const APIFeatures = require('../utils/apifeatures');
 const User = require('../models/userModel');
+const factory = require('./handlerFactory');
 
 const filterObject = (obj, fields) => {
   const output = {};
@@ -79,9 +80,4 @@ exports.updateUser = (req, res) => {
   });
 };
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'Route not yet defined',
-  });
-};
+exports.deleteUser = factory.deleteOne(User);
