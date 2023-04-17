@@ -104,6 +104,14 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+// virtuals
+
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
+
 // document middleware
 
 tourSchema.pre('save', function (next) {
@@ -143,7 +151,7 @@ tourSchema.post(/^find/, function (docs, next) {
 tourSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'guides',
-    select: '-__v passwordChangedAt',
+    select: '-__v -passwordChangedAt',
   });
   next();
 });
