@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // [Imports] ==============================================================
 
 const express = require('express');
@@ -31,7 +32,8 @@ if (process.env.NODE_ENV === 'development') {
 // limit requests from same IP
 const limiter = rateLimit({
   max: 100,
-  windowMs: 60 * 60 * 1000,
+  windowMs: 60 * 60 * 1000, // time window in milliseconds
+
   message: 'Too many requests from this IP, please try again in an hour',
 });
 app.use('/api', limiter);
