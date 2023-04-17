@@ -117,6 +117,11 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+// indexing
+// allows mongoDB to index this field for faster, more efficient queries.
+// tourSchema.index({ price: 1 });
+tourSchema.index({ price: 1, ratingsAverage: -1 }); // compound index. Will be used if either or both fields are queried
+
 // virtuals
 tourSchema.virtual('numReviews', {
   ref: 'Review',
