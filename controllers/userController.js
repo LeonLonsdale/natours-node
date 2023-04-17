@@ -1,6 +1,5 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-// const APIFeatures = require('../utils/apifeatures');
 const User = require('../models/userModel');
 const factory = require('./handlerFactory');
 
@@ -66,15 +65,10 @@ exports.getUser = (req, res) => {
   });
 };
 
-// exports.createUser = (req, res) => {
-//   res.status(500).json({
-//     status: 'error',
-//     message: 'Route not yet defined',
-//   });
-// };
-
 exports.createUser = factory.createOne(User);
 
 exports.updateUser = factory.updateOne(User);
 
 exports.deleteUser = factory.deleteOne(User);
+
+// ====== [ old code ]

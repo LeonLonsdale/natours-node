@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 const mongoose = require('mongoose');
-
 const dotenv = require('dotenv');
 
 process.on('uncaughtException', (err) => {
@@ -19,7 +18,7 @@ const DB = process.env.DATABASE.replace(
 );
 
 async function main() {
-  await mongoose.connect(DB).then(() => console.log('Connected to mongoDB'));
+  await mongoose.connect(DB).then(() => console.log('Connected to database'));
 }
 main();
 // .catch((err) =>
