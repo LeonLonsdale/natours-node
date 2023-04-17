@@ -4,8 +4,15 @@ const userController = require('../controllers/userController');
 
 const authController = require('../controllers/authController');
 
-const { getAllUsers, getUser, updateUser, deleteUser, updateMe, deleteMe } =
-  userController;
+const {
+  getAllUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  updateMe,
+  deleteMe,
+  getMe,
+} = userController;
 
 const {
   signup,
@@ -17,6 +24,8 @@ const {
 } = authController;
 
 const router = express.Router();
+
+router.get('/me', protect, getMe, getUser);
 
 router.post('/signup', signup);
 router.post('/login', login);

@@ -12,6 +12,12 @@ const filterObject = (obj, fields) => {
   });
   return output;
 };
+// middleware to set params id to user id (from protect).
+// router => protect, getMe, getUser = getOne.
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // create error if trying to update password
