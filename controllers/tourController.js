@@ -130,6 +130,46 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  if (!lat || !lng)
+    next(
+      new AppError(
+        'Please provide a latitude and longitude in the format lat, lng',
+        400
+      )
+    );
+
+  const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
+
+  const distances = await Tour.aggregate([
+    {
+      // goeNear requires a geospatial index - created already for Within.
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1],
+        },
+        distanceField: 'distance',
+        distanceMultiplier: multiplier,
+      },
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+  // by default, 'distances' will be in metres.
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: distances,
+    },
+  });
+});
+
 // ====== [ old code ]
 
 // exports.deleteTour = catchAsync(async (req, res, next) => {

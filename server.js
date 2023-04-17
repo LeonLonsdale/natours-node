@@ -2,6 +2,9 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+dotenv.config({ path: './.env' }); // must be before importing the app file.
+const app = require('./app');
+
 process.on('uncaughtException', (err) => {
   console.log('---[ Error: Uncaught Exception ]---');
   console.log('Error type:', err.name);
@@ -9,8 +12,6 @@ process.on('uncaughtException', (err) => {
   console.log('--[ Shutting down ]---');
   process.exit(1);
 });
-
-dotenv.config({ path: './.env' }); // must be before importing the app file.
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -24,8 +25,6 @@ main();
 // .catch((err) =>
 //   console.log('Logging this error--------------', err.name)
 // );
-
-const app = require('./app');
 
 const port = process.env.PORT || 8080;
 
