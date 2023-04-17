@@ -1,5 +1,5 @@
 const Tour = require('../models/tourModel');
-const APIFeatures = require('../utils/apifeatures');
+// const APIFeatures = require('../utils/apifeatures');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
@@ -20,27 +20,7 @@ exports.aliasTopRated = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  const features = new APIFeatures(
-    Tour.find().populate('numReviews'),
-    req.query
-  )
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const tours = await features.query;
-
-  // Respond
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
-});
-
+exports.getAllTours = factory.getAll(Tour, { path: 'numReviews' });
 exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 exports.createTour = factory.createOne(Tour);
 exports.updateTour = factory.updateOne(Tour);
@@ -179,6 +159,27 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 //     status: 'success',
 //     data: {
 //       tour,
+//     },
+//   });
+// });
+
+// exports.getAllTours = catchAsync(async (req, res, next) => {
+//   const features = new APIFeatures(
+//     Tour.find().populate('numReviews'),
+//     req.query
+//   )
+//     .filter()
+//     .sort()
+//     .limitFields()
+//     .paginate();
+//   const tours = await features.query;
+
+//   // Respond
+//   res.status(200).json({
+//     status: 'success',
+//     results: tours.length,
+//     data: {
+//       tours,
 //     },
 //   });
 // });

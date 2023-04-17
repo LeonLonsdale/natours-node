@@ -1,25 +1,8 @@
 const Review = require('../models/reviewModel');
 // const AppError = require('../utils/appError');
-const catchAsync = require('../utils/catchAsync');
+// const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 // const APIFeatures = require('../utils/apifeatures');
-
-exports.getAllReviews = catchAsync(async (req, res, next) => {
-  // if a tour ID exists from a nested route, only return the specific tour
-  let filter;
-  if (req.params.tourId) filter = { tour: req.params.tourId };
-  // get all reviews
-  const reviews = await Review.find(filter);
-
-  // return all reviews
-  res.status(200).json({
-    status: 'success',
-    results: reviews.length,
-    data: {
-      reviews,
-    },
-  });
-});
 
 exports.setTourUserIds = (req, res, next) => {
   if (!req.body.tour) req.body.tour = req.params.tourId; // reference tour id in review (parent referencing)
@@ -27,6 +10,7 @@ exports.setTourUserIds = (req, res, next) => {
   next();
 };
 
+exports.getAllReviews = factory.getAll(Review);
 exports.getReview = factory.getOne(Review, { path: 'tour', select: 'name' });
 exports.createReview = factory.createOne(Review);
 exports.deleteReview = factory.deleteOne(Review);
@@ -63,6 +47,23 @@ exports.updateReview = factory.updateOne(Review);
 //     status: 'success',
 //     data: {
 //       review,
+//     },
+//   });
+// });
+
+// exports.getAllReviews = catchAsync(async (req, res, next) => {
+//   // if a tour ID exists from a nested route, only return the specific tour
+//   let filter;
+//   if (req.params.tourId) filter = { tour: req.params.tourId };
+//   // get all reviews
+//   const reviews = await Review.find(filter);
+
+//   // return all reviews
+//   res.status(200).json({
+//     status: 'success',
+//     results: reviews.length,
+//     data: {
+//       reviews,
 //     },
 //   });
 // });
