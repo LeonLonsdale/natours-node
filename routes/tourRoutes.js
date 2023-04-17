@@ -27,13 +27,18 @@ const { protect, restrictTo } = authController;
 router.route('/top-five-cheap').get(aliasTopCheap, getAllTours);
 router.route('/top-five-rated').get(aliasTopRated, getAllTours);
 router.route('/stats').get(getTourStats);
-router.route('/monthly-plan/:year').get(getMonthlyPlan);
-router.route('/').get(protect, getAllTours).post(createTour);
+router
+  .route('/monthly-plan/:year')
+  .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
+router
+  .route('/')
+  .get(getAllTours)
+  .post(protect, restrictTo('admin', 'lead-guide'), createTour);
 router
   .route('/:id')
   .get(getTour)
-  .patch(updateTour)
-  .delete(protect, restrictTo('admin'), deleteTour);
+  .patch(protect, restrictTo('admin', 'lead-guide'), updateTour)
+  .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 
 router.use('/:tourId/reviews', reviewRouter);
 
