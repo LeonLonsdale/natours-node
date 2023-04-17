@@ -43,7 +43,18 @@ app.use(mongoSanitize());
 // data sanitisation against XSS
 app.use(xss());
 // prevent parameter pollution
-app.use(hpp());
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsQuantity',
+      'ratingsAverage',
+      'price',
+      'maxGroupSize',
+      'difficulty',
+    ],
+  })
+);
 // serve static files
 app.use(express.static(`${__dirname}/public`)); // public files include HTML, CSS, etc. Use this to allow access to these files from browser.
 
