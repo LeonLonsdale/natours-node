@@ -4,7 +4,8 @@ const userController = require('../controllers/userController');
 
 const authController = require('../controllers/authController');
 
-const { getAllUsers, getUser, updateUser, deleteUser } = userController;
+const { getAllUsers, getUser, updateUser, deleteUser, updateMe } =
+  userController;
 
 const {
   signup,
@@ -23,6 +24,8 @@ router.post('/login', login);
 router.post('/forgot-password', forgotPassword);
 router.patch('/reset-password/:token', resetPassword);
 router.patch('/update-my-password', protect, updatePassword);
+
+router.patch('/update-me', protect, updateMe);
 
 router.route('/').get(getAllUsers);
 // .post(createUser);
