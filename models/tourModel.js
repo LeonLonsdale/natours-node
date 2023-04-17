@@ -138,17 +138,10 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-// embedding data model
-// get users from their ID's
-// NOTES
+// NOTES - embedding data into a data model based on ID's
 // tourSchema.pre('save', async function (next) {
 //   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
 //   this.guides = await Promise.all(guidesPromises);
-//   next();
-// });
-
-// tourSchema.post('save', (doc, next) => {
-//   console.log(doc);
 //   next();
 // });
 
