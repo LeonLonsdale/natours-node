@@ -4,19 +4,38 @@ const express = require('express');
 
 const app = express();
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
-// [Middleware] ===========================================================
+// [Global Middleware] ===========================================================
 // eslint-disable-next-line no-console
+
+// Set security HTTP headers
+app.use(helmet());
+
+// Development logging middleware
 console.log(`Starting app. Mode: ${process.env.NODE_ENV}`);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-app.use(express.json()); // adds data from body to request object
+
+// limit requests from same IP
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour',
+});
+app.use('/api', limiter);
+
+// body parser
+app.use(express.json({ limit: '10kb' })); // adds data from body to request object
+
+// serve static files
 app.use(express.static(`${__dirname}/public`)); // public files include HTML, CSS, etc. Use this to allow access to these files from browser.
 
 // [Routing] ==============================================================
