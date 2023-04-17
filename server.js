@@ -11,7 +11,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-dotenv.config({ path: './config.env' }); // must be before importing the app file.
+dotenv.config({ path: './.env' }); // must be before importing the app file.
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
