@@ -64,10 +64,18 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
   // the resolved aggretate promise is an array of objects containing our results
   // [{_id:... , nRating: x, avgRating: y}] - if we did this for all tours each tour would be an object in the array.
   // persist results to the tours collection.
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating,
-  });
+
+  if (stats.length) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
 };
 // set up a post-save middleware hook that calls on the calcAverageRatings static
 // post middleware does not get access to next().
@@ -77,6 +85,31 @@ reviewSchema.post('save', function () {
   this.constructor.calcAverageRatings(this.tour);
 });
 
+// no document middleware available for editing / deleting a review. No access to the document
+// no access to the doc in a pre-query hook as the query hasn't executed yet
+// need to use a post-query hook to gain access to the doc.
+
+reviewSchema.post(/^findOneAnd/, async (doc) => {
+  if (doc) await doc.constructor.calcAverageRatings(doc.tour);
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
+
+// -----[ old code ]
+
+// need access to the current document to extract the tour ID.
+// the hooks used to edit / delete are findByIdAndUpdate, and findByIdAndDelete
+// these are both mongoose short-hands for the original findOneAndUpdate, and findOneAndDelete
+
+// reviewSchema.pre(/^findOneAnd/, async function (next) {
+//   // execute the query to give us the document we need
+//   // save it as a property on 'this' so that it's available to post-middleware
+//   this.r = await this.findOne();
+//   next();
+// });
+
+// reviewSchema.post(/^findOneAnd/, async () => {
+//   await this.r.constructor.calcAverageRatings(this.r.tour);
+// });
