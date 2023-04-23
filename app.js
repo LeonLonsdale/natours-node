@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 // [Imports] ==============================================================
+const path = require('path');
 
 const express = require('express');
 
@@ -17,9 +18,14 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 
-// [Global Middleware] ===========================================================
-// eslint-disable-next-line no-console
+// [ Template Engine ] ====================
 
+app.set('view engine', 'pug'); // comes built-in
+app.set('views', path.join(__dirname, 'views'));
+
+// [Global Middleware] ===========================================================
+// serve static files
+app.use(express.static(path.join(__dirname, 'public'))); // public files include HTML, CSS, etc. Use this to allow access to these files from browser.
 // Set security HTTP headers
 app.use(helmet());
 
@@ -58,12 +64,17 @@ app.use(
     ],
   })
 );
-// serve static files
-app.use(express.static(`${__dirname}/public`)); // public files include HTML, CSS, etc. Use this to allow access to these files from browser.
 
 // [Routing] ==============================================================
 
 // mount the routers
+app.get('/', (req, res) =>
+  res.status(200).render('base', {
+    tour: 'Banana boats',
+    location: 'Liverpool',
+    user: 'Leon',
+  })
+);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

@@ -49,6 +49,7 @@ const sendProdError = (err, res) => {
 
 module.exports = (err, req, res, next) => {
   let error = err;
+
   error.statusCode = error.statusCode || 500;
   error.status = error.status || 'Error';
 
