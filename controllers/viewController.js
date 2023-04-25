@@ -21,7 +21,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
     path: 'reviews',
     fields: 'review rating user',
   });
-  console.log(tour);
+
   if (!tour) return next(new AppError('Tour not found', 404));
 
   res.status(200).render('tour', {
