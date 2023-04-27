@@ -80,7 +80,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   let token;
   const auth = req.headers.authorization;
 
-  // if this doens't work, replace auth with req.headers.authorization
   if (auth && auth.startsWith('Bearer')) {
     token = auth.split(' ')[1];
   } else if (req.cookies.jwt) {
@@ -102,6 +101,24 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // grant access
   req.user = user;
+  next();
+});
+
+// NOTES: check login state for rendered pages. No errors.
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    const token = req.cookies.jwt;
+    // 1) Validate cookie
+    const decoded = await verifyToken(token);
+    // 2) Check if the user still exists
+    const user = await User.findById(decoded.id);
+    if (!user) return next();
+    // 3) Check if the user changed password since the token was issued
+    if (user.changedPasswordAfter(decoded.iat)) return next();
+    // 4) grant access
+    res.locals.user = user; // make the user available to pug
+    return next();
+  }
   next();
 });
 

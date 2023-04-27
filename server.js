@@ -22,9 +22,6 @@ async function main() {
   await mongoose.connect(DB).then(() => console.log('Connected to database'));
 }
 main();
-// .catch((err) =>
-//   console.log('Logging this error--------------', err.name)
-// );
 
 const port = process.env.PORT || 8080;
 
