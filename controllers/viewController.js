@@ -1,6 +1,7 @@
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const { capitaliseSlug } = require('../utils/utilityFunctions');
 
 exports.getOverview = catchAsync(async (req, res, next) => {
   // get all tour data
@@ -22,7 +23,15 @@ exports.getTour = catchAsync(async (req, res, next) => {
     fields: 'review rating user',
   });
 
-  if (!tour) return next(new AppError('Tour not found', 404));
+  if (!tour)
+    return next(
+      new AppError(
+        `'${capitaliseSlug(
+          slug
+        )}' cannot be found. Check the spelling and try again`,
+        404
+      )
+    );
 
   res.status(200).render('tour', {
     title: tour.name,

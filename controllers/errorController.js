@@ -23,38 +23,71 @@ const handleJWTError = () => new AppError('Invalid token, please login', 401);
 const handleJWTExpiredError = () =>
   new AppError('Your token has expired, please login again', 401);
 
-const sendDevError = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
+const sendDevError = (err, req, res) => {
+  // NOTES check if the url is an api url and send api error
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
+    });
+  }
+
+  // NOTES otherwise send a rendered web error
+
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
     message: err.message,
-    stack: err.stack,
   });
 };
 
-const sendProdError = (err, res) => {
+const sendProdError = (err, req, res) => {
+  // API error
+  if (req.originalUrl.startsWith('/api')) {
+    if (err.isOperational) {
+      return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
+    }
+    if (!err.isOperational) {
+      return res.status(500).json({
+        title: 'Something went wrong',
+        message: err.message,
+      });
+    }
+  }
+
+  // rendered web error
   if (err.isOperational) {
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).render('error', {
       status: err.status,
       message: err.message,
     });
   }
   if (!err.isOperational) {
-    res.status(500).json({
-      status: 'Error',
-      message: 'Something went wrong',
+    return res.status(500).render('error', {
+      title: 'Something went wrong!',
+      message: 'Please try again later',
     });
   }
 };
 
 module.exports = (err, req, res, next) => {
-  let error = err;
+  let error = { ...err };
 
-  error.statusCode = error.statusCode || 500;
-  error.status = error.status || 'Error';
+  error.message = err.message;
+
+  // let error = structuredClone(err);
+  // error.statusCode = err.statusCode || 500;
+  // error.status = err.status || 'Error';
+  // error.isOperational = err.isOperational || false;
+
+  // console.log('Original: ', err);
 
   if (process.env.NODE_ENV === 'development') {
-    sendDevError(error, res);
+    sendDevError(error, req, res);
   }
   if (process.env.NODE_ENV === 'production') {
     if (error.name === 'CastError') error = handleCastErrorDB(error);
@@ -63,6 +96,6 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError')
       error = handleJWTExpiredError(error);
-    sendProdError(error, res);
+    sendProdError(error, req, res);
   }
 };
