@@ -1,10 +1,11 @@
 import { displayMap } from './mapbox.js';
-import { login } from './login';
+import { login, logout } from './login';
 
 // DOM
 
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('form');
+const logoutButton = document.querySelector('.nav__el--logout');
 
 // VALUES
 
@@ -20,4 +21,8 @@ if (loginForm) {
     const password = document.getElementById('password').value;
     login(email, password);
   });
+}
+
+if (logoutButton) {
+  logoutButton.addEventListener('click', logout);
 }

@@ -104,23 +104,39 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+// Logout
+
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({
+    status: 'success',
+  });
+};
+
 // NOTES: check login state for rendered pages. No errors.
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
+exports.isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
-    const token = req.cookies.jwt;
-    // 1) Validate cookie
-    const decoded = await verifyToken(token);
-    // 2) Check if the user still exists
-    const user = await User.findById(decoded.id);
-    if (!user) return next();
-    // 3) Check if the user changed password since the token was issued
-    if (user.changedPasswordAfter(decoded.iat)) return next();
-    // 4) grant access
-    res.locals.user = user; // make the user available to pug
-    return next();
+    try {
+      const token = req.cookies.jwt;
+      // 1) Validate cookie
+      const decoded = await verifyToken(token);
+      // 2) Check if the user still exists
+      const user = await User.findById(decoded.id);
+      if (!user) return next();
+      // 3) Check if the user changed password since the token was issued
+      if (user.changedPasswordAfter(decoded.iat)) return next();
+      // 4) grant access
+      res.locals.user = user; // make the user available to pug
+      return next();
+    } catch (err) {
+      return next();
+    }
   }
   next();
-});
+};
 
 exports.restrictTo =
   (...roles) =>
