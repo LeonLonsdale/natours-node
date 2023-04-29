@@ -2136,6 +2136,19 @@
     mergeConfig: mergeConfig2
   } = axios_default;
 
+  // public/js/alerts.js
+  var hideAlert = () => {
+    const element = document.querySelector(".alert");
+    if (element)
+      element.parentElement.removeChild(element);
+  };
+  var showAlert = (type, message) => {
+    hideAlert();
+    const markup = `<div class="alert alert--${type}">${message}</div>`;
+    document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+    window.setTimeout(hideAlert, 5e3);
+  };
+
   // public/js/login.js
   var login = async (email, password) => {
     try {
@@ -2148,12 +2161,12 @@
         }
       });
       if (result.data.status === "success") {
-        alert("Logged in successfully");
+        showAlert("success", "Logged in successfully!");
         window.setTimeout(() => location.assign("/"), 1500);
       }
       console.log(result);
     } catch (err) {
-      alert(err.response.data.message);
+      showAlert("error", err.response.data.message);
     }
   };
 
