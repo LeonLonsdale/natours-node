@@ -9,20 +9,18 @@
     "start": "nodemon server.js",
     "start-prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb server.js",
-    "watch": "parcel watch",
-    "build": "parcel build ./public/js/index.js --dist-dir ./public/js/bundle.js"
+    "watch": "esbuild ./public/js/index.js --bundle --outfile=./public/js/bundle.js --watch",
+    "build": "esbuild ./public/js/index.js --bundle --outfile=./public/js/bundle.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/polyfill": "^7.12.1",
-    "@swc/helpers": "^0.4.12",
     "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
-    "core-js": "^3.30.1",
     "dotenv": "^16.0.3",
+    "esbuild": "0.17.18",
     "express": "^4.18.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.7.0",
@@ -35,7 +33,6 @@
     "nodemailer": "^6.9.1",
     "npm": "^9.6.5",
     "pug": "^3.0.2",
-    "regenerator-runtime": "^0.13.11",
     "slugify": "^1.6.6",
     "validator": "^13.9.0",
     "xss-clean": "^0.1.1"
@@ -50,7 +47,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
-    "parcel": "^2.8.3",
     "prettier": "^2.8.7"
   },
   "engines": {
