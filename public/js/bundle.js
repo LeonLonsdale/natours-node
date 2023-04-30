@@ -2175,7 +2175,7 @@
         url: "http://localhost:8080/api/v1/users/logout"
       });
       if (result.data.status === "success")
-        location.reload(true);
+        location.assign("/");
     } catch (err) {
       showAlert("error", "Error logging out. Try again");
     }

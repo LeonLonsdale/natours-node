@@ -28,7 +28,7 @@ export const logout = async () => {
       method: 'GET',
       url: 'http://localhost:8080/api/v1/users/logout',
     });
-    if (result.data.status === 'success') location.reload(true); //true means reaload from server and not browser cache.
+    if (result.data.status === 'success') location.assign('/'); //true means reaload from server and not browser cache.
   } catch (err) {
     showAlert('error', 'Error logging out. Try again');
   }

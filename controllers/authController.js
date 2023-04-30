@@ -89,7 +89,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (!token) return next(new AppError('You are not logged in', 401));
 
   // 2) Validate token
-  const decoded = await verifyToken(token);
+  const decoded = await verifyToken(token).catch((err) =>
+    next(new AppError('You are not logged in', 401))
+  );
 
   // 3) Check if the user still exists
   const user = await User.findById(decoded.id);
@@ -101,16 +103,18 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // grant access
   req.user = user;
+  res.locals.user = user;
   next();
 });
 
 // Logout
 
 exports.logout = (req, res) => {
-  res.cookie('jwt', 'loggedout', {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
+  // res.cookie('jwt', 'loggedout', {
+  //   expires: new Date(Date.now() + 10 * 1000),
+  //   httpOnly: true,
+  // });
+  res.clearCookie('jwt');
   res.status(200).json({
     status: 'success',
   });
