@@ -12,6 +12,7 @@ const {
   updateMe,
   deleteMe,
   getMe,
+  uploadUserPhoto,
 } = userController;
 
 const {
@@ -24,6 +25,8 @@ const {
   restrictTo,
   logout,
 } = authController;
+
+const upload = multer({ dest: 'public/img/users' });
 
 const router = express.Router();
 
@@ -39,7 +42,7 @@ router.use(protect);
 
 router.get('/me', getMe, getUser);
 router.patch('/update-my-password', updatePassword);
-router.patch('/update-me', updateMe);
+router.patch('/update-me', uploadUserPhoto, updateMe);
 router.delete('/delete-me', deleteMe);
 
 // restricted routes
