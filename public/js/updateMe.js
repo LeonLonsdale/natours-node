@@ -16,6 +16,6 @@ export const updateData = async (name, email) => {
       showAlert('success', 'Details successfully updated');
     }
   } catch (error) {
-    showAlert('error', err.response.data.message);
+    showAlert('error', error.response.data.message);
   }
 };

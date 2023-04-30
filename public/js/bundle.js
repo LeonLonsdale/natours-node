@@ -1447,8 +1447,8 @@
         settle(function _resolve(value) {
           resolve(value);
           done();
-        }, function _reject(err2) {
-          reject(err2);
+        }, function _reject(err) {
+          reject(err);
           done();
         }, response);
         request = null;
@@ -2164,8 +2164,8 @@
         showAlert("success", "Logged in successfully!");
         window.setTimeout(() => location.assign("/"), 1500);
       }
-    } catch (err2) {
-      showAlert("error", err2.response.data.message);
+    } catch (err) {
+      showAlert("error", err.response.data.message);
     }
   };
   var logout = async () => {
@@ -2176,7 +2176,7 @@
       });
       if (response.data.status === "success")
         location.assign("/");
-    } catch (err2) {
+    } catch (err) {
       showAlert("error", "Error logging out. Try again");
     }
   };
@@ -2196,7 +2196,7 @@
         showAlert("success", "Details successfully updated");
       }
     } catch (error) {
-      showAlert("error", err.response.data.message);
+      showAlert("error", error.response.data.message);
     }
   };
 
