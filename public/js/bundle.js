@@ -2182,21 +2182,19 @@
   };
 
   // public/js/updateMe.js
-  var updateData = async (name, email) => {
+  var updateData = async (data, type) => {
     try {
+      const url = type === "password" ? "http://localhost:8080/api/v1/users/update-my-password" : "http://localhost:8080/api/v1/users/update-me";
       const response = await axios_default({
         method: "PATCH",
-        url: "http://localhost:8080/api/v1/users/update-me",
-        data: {
-          name,
-          email
-        }
+        url,
+        data
       });
       if (response.data.status === "success") {
-        showAlert("success", "Details successfully updated");
+        showAlert("success", `${type.toUpperCase()} successfully updated`);
       }
     } catch (error) {
-      showAlert("error", error.response.data.message);
+      return showAlert("error", error.response.data.message);
     }
   };
 
@@ -2205,6 +2203,7 @@
   var loginForm = document.querySelector(".form--login");
   var logoutButton = document.querySelector(".nav__el--logout");
   var userDataForm = document.querySelector(".form-user-data");
+  var userPasswordForm = document.querySelector(".form-user-password");
   if (mapBox) {
     const locations = JSON.parse(mapBox.dataset.locations);
     displayMap(locations);
@@ -2225,7 +2224,23 @@
       e.preventDefault();
       const email = document.getElementById("email").value;
       const name = document.getElementById("name").value;
-      updateData(name, email);
+      updateData({ name, email }, "data");
+    });
+  }
+  if (userPasswordForm) {
+    userPasswordForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const saveButton = document.querySelector(".btn--save-password");
+      saveButton.textContent = "Updating...";
+      const currentPassword = document.getElementById("password-current").value;
+      const newPassword = document.getElementById("password").value;
+      const confirmNewPassword = document.getElementById("password-confirm").value;
+      await updateData(
+        { currentPassword, newPassword, confirmNewPassword },
+        "password"
+      );
+      saveButton.textContent = "Save Password";
+      userPasswordForm.reset();
     });
   }
 })();
