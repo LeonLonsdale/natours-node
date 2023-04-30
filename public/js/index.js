@@ -1,11 +1,13 @@
 import { displayMap } from './mapbox.js';
 import { login, logout } from './login';
+import { updateData } from './updateMe.js';
 
 // DOM
 
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logoutButton = document.querySelector('.nav__el--logout');
+const userDataForm = document.querySelector('.form-user-data');
 
 // VALUES
 
@@ -25,4 +27,13 @@ if (loginForm) {
 
 if (logoutButton) {
   logoutButton.addEventListener('click', logout);
+}
+
+if (userDataForm) {
+  userDataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const name = document.getElementById('name').value;
+    updateData(name, email);
+  });
 }

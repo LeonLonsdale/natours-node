@@ -4,7 +4,7 @@ import { showAlert } from './alerts';
 
 export const login = async (email, password) => {
   try {
-    const result = await axios({
+    const response = await axios({
       method: 'POST',
       url: 'http://localhost:8080/api/v1/users/login',
       data: {
@@ -13,7 +13,7 @@ export const login = async (email, password) => {
       },
     });
 
-    if (result.data.status === 'success') {
+    if (response.data.status === 'success') {
       showAlert('success', 'Logged in successfully!');
       window.setTimeout(() => location.assign('/'), 1500);
     }
@@ -24,11 +24,11 @@ export const login = async (email, password) => {
 
 export const logout = async () => {
   try {
-    const result = await axios({
+    const response = await axios({
       method: 'GET',
       url: 'http://localhost:8080/api/v1/users/logout',
     });
-    if (result.data.status === 'success') location.assign('/'); //true means reaload from server and not browser cache.
+    if (response.data.status === 'success') location.assign('/'); //true means reaload from server and not browser cache.
   } catch (err) {
     showAlert('error', 'Error logging out. Try again');
   }

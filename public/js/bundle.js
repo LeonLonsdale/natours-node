@@ -1447,8 +1447,8 @@
         settle(function _resolve(value) {
           resolve(value);
           done();
-        }, function _reject(err) {
-          reject(err);
+        }, function _reject(err2) {
+          reject(err2);
           done();
         }, response);
         request = null;
@@ -2152,7 +2152,7 @@
   // public/js/login.js
   var login = async (email, password) => {
     try {
-      const result = await axios_default({
+      const response = await axios_default({
         method: "POST",
         url: "http://localhost:8080/api/v1/users/login",
         data: {
@@ -2160,24 +2160,43 @@
           password
         }
       });
-      if (result.data.status === "success") {
+      if (response.data.status === "success") {
         showAlert("success", "Logged in successfully!");
         window.setTimeout(() => location.assign("/"), 1500);
       }
-    } catch (err) {
-      showAlert("error", err.response.data.message);
+    } catch (err2) {
+      showAlert("error", err2.response.data.message);
     }
   };
   var logout = async () => {
     try {
-      const result = await axios_default({
+      const response = await axios_default({
         method: "GET",
         url: "http://localhost:8080/api/v1/users/logout"
       });
-      if (result.data.status === "success")
+      if (response.data.status === "success")
         location.assign("/");
-    } catch (err) {
+    } catch (err2) {
       showAlert("error", "Error logging out. Try again");
+    }
+  };
+
+  // public/js/updateMe.js
+  var updateData = async (name, email) => {
+    try {
+      const response = await axios_default({
+        method: "PATCH",
+        url: "http://localhost:8080/api/v1/users/update-me",
+        data: {
+          name,
+          email
+        }
+      });
+      if (response.data.status === "success") {
+        showAlert("success", "Details successfully updated");
+      }
+    } catch (error) {
+      showAlert("error", err.response.data.message);
     }
   };
 
@@ -2185,6 +2204,7 @@
   var mapBox = document.getElementById("map");
   var loginForm = document.querySelector(".form--login");
   var logoutButton = document.querySelector(".nav__el--logout");
+  var userDataForm = document.querySelector(".form-user-data");
   if (mapBox) {
     const locations = JSON.parse(mapBox.dataset.locations);
     displayMap(locations);
@@ -2199,5 +2219,13 @@
   }
   if (logoutButton) {
     logoutButton.addEventListener("click", logout);
+  }
+  if (userDataForm) {
+    userDataForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const name = document.getElementById("name").value;
+      updateData(name, email);
+    });
   }
 })();
