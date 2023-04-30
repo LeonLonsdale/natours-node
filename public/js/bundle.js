@@ -2183,7 +2183,7 @@
 
   // public/js/index.js
   var mapBox = document.getElementById("map");
-  var loginForm = document.querySelector("form");
+  var loginForm = document.querySelector(".form--login");
   var logoutButton = document.querySelector(".nav__el--logout");
   if (mapBox) {
     const locations = JSON.parse(mapBox.dataset.locations);
