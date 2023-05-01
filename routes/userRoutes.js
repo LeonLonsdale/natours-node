@@ -26,8 +26,6 @@ const {
   logout,
 } = authController;
 
-const upload = multer({ dest: 'public/img/users' });
-
 const router = express.Router();
 
 // public routes
