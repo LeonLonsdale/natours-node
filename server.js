@@ -9,6 +9,7 @@ process.on('uncaughtException', (err) => {
   console.log('---[ Error: Uncaught Exception ]---');
   console.log('Error type:', err.name);
   console.log('Error reason:', err.message);
+  console.log('Stack', err.stack);
   console.log('--[ Shutting down ]---');
   process.exit(1);
 });

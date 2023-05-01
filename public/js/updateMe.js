@@ -11,6 +11,9 @@ export const updateData = async (data, type) => {
     const response = await axios({
       method: 'PATCH',
       url,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
       data,
     });
 

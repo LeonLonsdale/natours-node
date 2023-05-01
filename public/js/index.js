@@ -33,9 +33,14 @@ if (logoutButton) {
 if (userDataForm) {
   userDataForm.addEventListener('submit', (e) => {
     e.preventDefault();
+    const form = new FormData();
     const email = document.getElementById('email').value;
     const name = document.getElementById('name').value;
-    updateData({ name, email }, 'data');
+    const photo = document.getElementById('photo').files[0]; // files is an array of the files
+    form.append('name', name);
+    form.append('email', email);
+    form.append('photo', photo);
+    updateData(form, 'data');
   });
 }
 

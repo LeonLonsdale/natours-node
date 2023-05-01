@@ -5,3 +5,13 @@ exports.capitaliseSlug = (string) => {
   );
   return capitalisedWords.join(' ');
 };
+
+exports.filterObject = (obj, fields) => {
+  const output = {};
+  Object.keys(obj).forEach((key) => {
+    if (fields.includes(key)) {
+      output[key] = obj[key];
+    }
+  });
+  return output;
+};

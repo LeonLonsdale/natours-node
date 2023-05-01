@@ -1,21 +1,28 @@
 const multer = require('multer');
+const sharp = require('sharp');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const factory = require('./handlerFactory');
+const { filterObject } = require('../utils/utilityFunctions');
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'public/img/users');
-  },
-  filename: (req, file, callback) => {
-    const ext = file.mimetype.split('/')[1];
-    callback(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-  },
-});
+// Photo upload & processing
+
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, callback) => {
+//     callback(null, 'public/img/users');
+//   },
+//   filename: (req, file, callback) => {
+//     const ext = file.mimetype.split('/')[1];
+//     callback(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+//   },
+// });
+
+// store the file to memory if we're processing the image before saving
+const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, callback) => {
-  if (req.mimetype.startsWith('image')) {
+  if (file.mimetype.startsWith('image')) {
     callback(null, true);
   } else {
     callback(new AppError('You can only upload images', 400), false);
@@ -29,15 +36,19 @@ const upload = multer({
 
 exports.uploadUserPhoto = upload.single('photo');
 
-const filterObject = (obj, fields) => {
-  const output = {};
-  Object.keys(obj).forEach((key) => {
-    if (fields.includes(key)) {
-      output[key] = obj[key];
-    }
-  });
-  return output;
+exports.resizeUserPhoto = (req, res, next) => {
+  if (!req.file) return next();
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  sharp(req.file.buffer)
+    .resize(500, 500) // get the image from memory and crop it to 500 x 500
+    .toFormat('jpeg') // convert the image to jpeg
+    .jpeg({ quality: 90 }) // compress the file to 90% quality
+    .toFile(`public/img/users/${req.file.filename}`); // save the file
+  next();
 };
+
+// other user middleware
+
 // middleware to set params id to user id (from protect).
 // router => protect, getMe, getUser = getOne.
 exports.getMe = (req, res, next) => {

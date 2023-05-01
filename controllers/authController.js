@@ -89,7 +89,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (!token) return next(new AppError('You are not logged in', 401));
 
   // 2) Validate token
-  const decoded = await verifyToken(token).catch((err) =>
+  const decoded = await verifyToken(token).catch(() =>
     next(new AppError('You are not logged in', 401))
   );
 

@@ -13,6 +13,7 @@ const {
   deleteMe,
   getMe,
   uploadUserPhoto,
+  resizeUserPhoto,
 } = userController;
 
 const {
@@ -40,7 +41,7 @@ router.use(protect);
 
 router.get('/me', getMe, getUser);
 router.patch('/update-my-password', updatePassword);
-router.patch('/update-me', uploadUserPhoto, updateMe);
+router.patch('/update-me', uploadUserPhoto, resizeUserPhoto, updateMe);
 router.delete('/delete-me', deleteMe);
 
 // restricted routes

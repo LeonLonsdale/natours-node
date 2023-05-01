@@ -2188,6 +2188,9 @@
       const response = await axios_default({
         method: "PATCH",
         url,
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
         data
       });
       if (response.data.status === "success") {
@@ -2222,9 +2225,14 @@
   if (userDataForm) {
     userDataForm.addEventListener("submit", (e) => {
       e.preventDefault();
+      const form = new FormData();
       const email = document.getElementById("email").value;
       const name = document.getElementById("name").value;
-      updateData({ name, email }, "data");
+      const photo = document.getElementById("photo").files[0];
+      form.append("name", name);
+      form.append("email", email);
+      form.append("photo", photo);
+      updateData(form, "data");
     });
   }
   if (userPasswordForm) {
