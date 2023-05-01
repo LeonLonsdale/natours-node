@@ -36,16 +36,16 @@ const upload = multer({
 
 exports.uploadUserPhoto = upload.single('photo');
 
-exports.resizeUserPhoto = (req, res, next) => {
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
-  sharp(req.file.buffer)
+  await sharp(req.file.buffer)
     .resize(500, 500) // get the image from memory and crop it to 500 x 500
     .toFormat('jpeg') // convert the image to jpeg
     .jpeg({ quality: 90 }) // compress the file to 90% quality
     .toFile(`public/img/users/${req.file.filename}`); // save the file
   next();
-};
+});
 
 // other user middleware
 
