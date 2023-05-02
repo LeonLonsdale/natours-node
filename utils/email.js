@@ -7,13 +7,19 @@ module.exports = class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.from = `Leon Lonsdale <${process.env.EMAIL_FROM}}>`;
+    this.from = `Leon Lonsdale ${process.env.EMAIL_FROM}`;
   }
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
       // sendgrid
-      return 1;
+      return nodemailer.createTransport({
+        service: 'SendGrid',
+        auth: {
+          user: process.env.SENDGRID_USER,
+          pass: process.env.SENDGRID_PASS,
+        },
+      });
     }
 
     return nodemailer.createTransport({
