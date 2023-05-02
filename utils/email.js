@@ -43,7 +43,7 @@ module.exports = class Email {
       from: this.from, // sender address
       to: this.to, // list of receivers
       subject, // Subject line
-      text: htmlToText.fromString(html), // plain text body
+      text: htmlToText.convert(html), // plain text body
       html, // html body
     };
     // 3. Create transport and send email
@@ -55,28 +55,28 @@ module.exports = class Email {
   }
 };
 
-const sendEmail = async (options) => {
-  // create reusable transporter object using the default SMTP transport
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
+// const sendEmail = async (options) => {
+//   // create reusable transporter object using the default SMTP transport
+//   const transporter = nodemailer.createTransport({
+//     host: process.env.EMAIL_HOST,
+//     port: process.env.EMAIL_PORT,
+//     auth: {
+//       user: process.env.EMAIL_USERNAME,
+//       pass: process.env.EMAIL_PASSWORD,
+//     },
+//   });
 
-  // Define email options
-  const mailOptions = {
-    from: 'leon.dev@icloud.com', // sender address
-    to: options.email, // list of receivers
-    subject: options.subject, // Subject line
-    text: options.message, // plain text body
-    // html: options.html, // html body
-  };
+//   // Define email options
+//   const mailOptions = {
+//     from: 'leon.dev@icloud.com', // sender address
+//     to: options.email, // list of receivers
+//     subject: options.subject, // Subject line
+//     text: options.message, // plain text body
+//     // html: options.html, // html body
+//   };
 
-  // Send the email
-  await transporter.sendMail(mailOptions);
-};
+//   // Send the email
+//   await transporter.sendMail(mailOptions);
+// };
 
-module.exports = sendEmail;
+// module.exports = sendEmail;
