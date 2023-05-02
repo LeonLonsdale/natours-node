@@ -80,8 +80,8 @@ module.exports = (err, req, res, next) => {
   error.message = err.message;
 
   // let error = structuredClone(err);
-  // error.statusCode = err.statusCode || 500;
-  // error.status = err.status || 'Error';
+  error.statusCode = err.statusCode || 500;
+  error.status = err.status || 'Error';
   // error.isOperational = err.isOperational || false;
 
   // console.log('Original: ', err);
