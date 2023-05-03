@@ -3,6 +3,7 @@ extends base
 include _reviewCard
 //- NOTES use extends and blocks to append instead of simply replace.
 block append head
+  //- script(async, src='https://js.stripe.com/v3/')
   script(src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js')
   link(href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet')
 
@@ -86,4 +87,8 @@ block content
       .cta__content
         h2.heading-secondary What are you waiting for?
         p.cta__text #{tour.duration} days. 1 adventure. Infinite memories. Make it yours today!
-        button.btn.btn--green.span-all-rows Book tour now!
+
+        if user
+          button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+        else 
+          a.btn.btn--green.span-all-rows(href='/login') Login to book tour

@@ -2201,12 +2201,25 @@
     }
   };
 
+  // public/js/stripe.js
+  var bookTour = async (tourId) => {
+    try {
+      const session = await axios_default(
+        `http://localhost:8080/api/v1/bookings/checkout-session/${tourId}`
+      );
+      window.location.assign(session.data.session.url);
+    } catch (err) {
+      showAlert("error", err);
+    }
+  };
+
   // public/js/index.js
   var mapBox = document.getElementById("map");
   var loginForm = document.querySelector(".form--login");
   var logoutButton = document.querySelector(".nav__el--logout");
   var userDataForm = document.querySelector(".form-user-data");
   var userPasswordForm = document.querySelector(".form-user-password");
+  var bookBtn = document.getElementById("book-tour");
   if (mapBox) {
     const locations = JSON.parse(mapBox.dataset.locations);
     displayMap(locations);
@@ -2249,6 +2262,13 @@
       );
       saveButton.textContent = "Save Password";
       userPasswordForm.reset();
+    });
+  }
+  if (bookBtn) {
+    bookBtn.addEventListener("click", async (e) => {
+      e.target.textContent = "Processing...";
+      const { tourId } = e.target.dataset;
+      bookTour(tourId);
     });
   }
 })();

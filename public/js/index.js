@@ -1,6 +1,7 @@
 import { displayMap } from './mapbox.js';
 import { login, logout } from './login';
 import { updateData } from './updateMe.js';
+import { bookTour } from './stripe.js';
 
 // DOM
 
@@ -9,6 +10,7 @@ const loginForm = document.querySelector('.form--login');
 const logoutButton = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
+const bookBtn = document.getElementById('book-tour');
 
 // VALUES
 
@@ -59,5 +61,15 @@ if (userPasswordForm) {
     );
     saveButton.textContent = 'Save Password';
     userPasswordForm.reset();
+  });
+}
+
+// stripe payments
+
+if (bookBtn) {
+  bookBtn.addEventListener('click', async (e) => {
+    e.target.textContent = 'Processing...';
+    const { tourId } = e.target.dataset;
+    bookTour(tourId);
   });
 }
