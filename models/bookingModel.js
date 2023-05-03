@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
   tour: {
-    type: mongoose.Schema.objectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'Tour',
     required: [true, 'A booking must belong to a tour'],
   },
   user: {
-    type: mongoose.Schema.objectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: [true, 'A booking must belong to a user'],
   },
@@ -32,6 +32,7 @@ bookingSchema.pre(/^find/, function (next) {
     path: 'tour',
     select: 'name',
   });
+  next();
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);
