@@ -2195,6 +2195,7 @@
       });
       if (response.data.status === "success") {
         showAlert("success", `${type.toUpperCase()} successfully updated`);
+        window.location.reload(true);
       }
     } catch (error) {
       return showAlert("error", error.response.data.message);
