@@ -26,9 +26,7 @@ main();
 
 const port = process.env.PORT || 8080;
 
-const server = app.listen(port, () =>
-  console.log(`App running on http://localhost:${port}`)
-);
+const server = app.listen(port, () => console.log(`App running on ${port}`));
 
 process.on('unhandledRejection', (err) => {
   console.log('---[ Error: Unhandled Rejection ]---');

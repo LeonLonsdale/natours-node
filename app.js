@@ -61,7 +61,7 @@ app.use(
 );
 
 // Development logging middleware
-console.log(`Starting app. Mode: ${process.env.NODE_ENV}`);
+// console.log(`Starting app. Mode: ${process.env.NODE_ENV}`);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }

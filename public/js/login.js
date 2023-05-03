@@ -6,7 +6,7 @@ export const login = async (email, password) => {
   try {
     const response = await axios({
       method: 'POST',
-      url: 'http://localhost:8080/api/v1/users/login',
+      url: '/api/v1/users/login',
       data: {
         email,
         password,
@@ -26,7 +26,7 @@ export const logout = async () => {
   try {
     const response = await axios({
       method: 'GET',
-      url: 'http://localhost:8080/api/v1/users/logout',
+      url: '/api/v1/users/logout',
     });
     if (response.data.status === 'success') location.assign('/'); //true means reaload from server and not browser cache.
   } catch (err) {

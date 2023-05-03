@@ -9,9 +9,7 @@ import { showAlert } from './alerts';
 export const bookTour = async (tourId) => {
   try {
     // get checkout session from API
-    const session = await axios(
-      `http://localhost:8080/api/v1/bookings/checkout-session/${tourId}`
-    );
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
     // direct to checkout form
     window.location.assign(session.data.session.url);
   } catch (err) {
