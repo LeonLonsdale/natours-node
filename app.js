@@ -13,6 +13,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const enforce = require('express-sslify');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -30,6 +31,12 @@ app.set('views', path.join(__dirname, 'views'));
 // [Global Middleware] ===========================================================
 // serve static files
 app.use(express.static(path.join(__dirname, 'public'))); // public files include HTML, CSS, etc. Use this to allow access to these files from browser.
+// trust proxies
+app.enable('trust proxy');
+
+// force https in production
+if (process.env.NODE_ENV === 'production') app.use(enforce.HTTP());
+
 // Set security HTTP headers
 app.use(
   helmet({
