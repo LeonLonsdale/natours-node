@@ -16,11 +16,11 @@ const createBookingCheckout = async (session) => {
   const userId = user._id;
   const price = session.amount_total / 100;
   console.log(price);
-  await Booking.create({ tour, userId, price });
+  await Booking.create({ tour, user: userId, price });
 };
 
 // signature : stripe adds header to the webhook request containing a signature for the webhook.
-exports.webhookCheckout = async (req, res, next) => {
+exports.webhookCheckout = catchAsync(async (req, res, next) => {
   const signature = req.headers['stripe-signature'];
   let event;
   try {
@@ -37,7 +37,7 @@ exports.webhookCheckout = async (req, res, next) => {
     await createBookingCheckout(event.data.object);
 
   res.status(200).json({ received: true });
-};
+});
 
 // Other routes
 exports.createBooking = factory.createOne(Booking);
