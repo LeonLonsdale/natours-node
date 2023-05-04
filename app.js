@@ -14,6 +14,7 @@ const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const enforce = require('express-sslify');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -36,6 +37,16 @@ app.enable('trust proxy');
 
 // force https in production
 if (process.env.NODE_ENV === 'production') app.use(enforce.HTTPS());
+
+//CORS NOTES app.use(cors()) works for 'simple requests' -> get, post
+// 'Non-simple requests: put, patch, delete, or requests that send cookies or use non-standard headers.
+// Non-simple require pre-flight phase.
+app.use(cors());
+// 'Non-simple requests: put, patch, delete, or requests that send cookies or use non-standard headers.
+// Non-simple require pre-flight phase -> before the real request, browser does an 'options' request to make sure the real request is safe
+// so we need to respond to the options request - which is another http request. When we get an options request, we need to send back the same
+// access control allow origin header, so the browser knows the request is safe to perform.
+app.options('*', cors());
 
 // Set security HTTP headers
 app.use(
