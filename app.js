@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // public files include
 app.enable('trust proxy');
 
 // force https in production
-if (process.env.NODE_ENV === 'production') app.use(enforce.HTTP());
+if (process.env.NODE_ENV === 'production') app.use(enforce.HTTPS());
 
 // Set security HTTP headers
 app.use(
