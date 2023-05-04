@@ -9,13 +9,10 @@ const factory = require('./handlerFactory');
 // NOTES STRIPE CHECKOUT USING WEBHOOK
 const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
-  console.log(tour);
   const user = await User.findOne({ email: session.customer_email });
-  console.log(user);
   if (!user) return new AppError('User not found', 404);
   const userId = user._id;
   const price = session.amount_total / 100;
-  console.log(price);
   await Booking.create({ tour, user: userId, price });
 };
 
@@ -32,7 +29,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   } catch (err) {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
-  console.log(event.data.object);
+
   if (event.type === 'checkout.session.completed')
     await createBookingCheckout(event.data.object);
 
@@ -60,7 +57,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     // success_url: `${req.protocol}://${req.get('host')}/?tour=${
     //   req.params.tourId
     // }&user=${req.user.id}&price=${tour.price}`,
-    success_url: `${req.protocol}://${req.get('host')}/my-tours`,
+    success_url: `${req.protocol}://${req.get('host')}/my-bookings`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
