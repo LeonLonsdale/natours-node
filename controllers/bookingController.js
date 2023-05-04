@@ -9,9 +9,13 @@ const factory = require('./handlerFactory');
 // NOTES STRIPE CHECKOUT USING WEBHOOK
 const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
+  console.log(tour);
   const user = await User.findOne({ email: session.customer_email });
+  console.log(user);
+  if (!user) return new AppError('User not found', 404);
   const userId = user._id;
   const price = session.amount_total / 100;
+  console.log(price);
   await Booking.create({ tour, userId, price });
 };
 
