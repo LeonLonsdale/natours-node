@@ -12,7 +12,7 @@ html(lang='en')
       script(defer, src='/js/bundle.js')
 
   
-  body
+  body(data-alert=`${alert ? alert : ''}`)
     // Header
     include _header
 

@@ -23,6 +23,7 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const { webhookCheckout } = require('./controllers/bookingController');
 
 // [ Template Engine ] ====================
 
@@ -46,7 +47,7 @@ app.use(cors());
 // Non-simple require pre-flight phase -> before the real request, browser does an 'options' request to make sure the real request is safe
 // so we need to respond to the options request - which is another http request. When we get an options request, we need to send back the same
 // access control allow origin header, so the browser knows the request is safe to perform.
-app.options('*', cors());
+app.options('*', cors()); // use on all routes, but can specify a route (replace *)
 
 // Set security HTTP headers
 app.use(
@@ -93,6 +94,15 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again in an hour',
 });
 app.use('/api', limiter);
+
+// stripe checkout webhook
+// NOTES use this here instead of bookingRouter, because we need the body in raw form:
+// we do not want the body parsed to json - which the next line in this file will do.
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  webhookCheckout
+);
 
 // body parser
 app.use(express.json({ limit: '10kb' })); // adds data from body to request object
